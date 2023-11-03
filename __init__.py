@@ -57,7 +57,11 @@ def is_installed(package, package_overwrite=None):
             print(f"Couldn't install\nCommand: {command}\nError code: {result.returncode}")
 
 from .WaveNodes import Lerp, SinWave, InvSinWave, CosWave, InvCosWave, SquareWave, SawtoothWave, TriangleWave, AbsCosWave, AbsSinWave
-from .ScheduledNodes import ValueSchedule, PromptSchedule, PromptScheduleNodeFlow, PromptScheduleNodeFlowEnd, PromptScheduleEncodeSDXL, StringSchedule, BatchPromptSchedule, BatchValueSchedule, BatchPromptScheduleEncodeSDXL #, BatchGLIGENSchedule
+from .ScheduledNodes import (
+    ValueSchedule, PromptSchedule, PromptScheduleNodeFlow, PromptScheduleNodeFlowEnd, PromptScheduleEncodeSDXL,
+    StringSchedule, BatchPromptSchedule, BatchValueSchedule, BatchPromptScheduleEncodeSDXL, BatchStringSchedule,
+    BatchValueScheduleLatentInput, BatchPromptScheduleEncodeSDXLLatentInput, BatchPromptScheduleLatentInput #, BatchGLIGENSchedule
+)
 
 NODE_CLASS_MAPPINGS = {
     "Lerp": Lerp,
@@ -79,8 +83,21 @@ NODE_CLASS_MAPPINGS = {
     "BatchPromptSchedule": BatchPromptSchedule,
     "BatchValueSchedule": BatchValueSchedule,
     "BatchPromptScheduleEncodeSDXL": BatchPromptScheduleEncodeSDXL,
+    "BatchStringSchedule": BatchStringSchedule,
+    "BatchValueScheduleLatentInput": BatchValueScheduleLatentInput,
+    "BatchPromptScheduleSDXLLatentInput":BatchPromptScheduleEncodeSDXLLatentInput,
+    "BatchPromptScheduleLatentInput":BatchPromptScheduleLatentInput,
     #"BatchGLIGENSchedule": BatchGLIGENSchedule,
 
 }
 
+NODE_DISPLAY_NAME_MAPPINGS = {
+
+    "PromptScheduleEncodeSDXL": "PromptScheduleSDXL",
+    "BatchPromptScheduleEncodeSDXL": "BatchPromptScheduleSDXL",
+    "BatchStringSchedule": "BatchStringSchedule",
+    "BatchValueScheduleLatentInput": "BatchValueSchedule(LatentInput)",
+    "BatchPromptScheduleSDXLLatentInput": "BatchPromptScheduleSDXL(LatentInput)",
+    "BatchPromptScheduleLatentInput": "BatchPromptSchedule(LatentInput)",
+}
 print('\033[34mFizzleDorf Custom Nodes: \033[92mLoaded\033[0m')
