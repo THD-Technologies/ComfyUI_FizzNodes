@@ -71,6 +71,7 @@ class PromptSchedule:
     CATEGORY = "FizzNodes 📅🅕🅝/ScheduleNodes"
 
     def animate(self, text, max_frames, print_output, current_frame, clip, pw_a=0, pw_b=0, pw_c=0, pw_d=0, pre_text='', app_text=''):
+        current_frame = current_frame % max_frames
         inputText = str("{" + text + "}")
         inputText = re.sub(r',\s*}', '}', inputText)
         animation_prompts = json.loads(inputText.strip())
@@ -201,6 +202,7 @@ class StringSchedule:
     CATEGORY = "FizzNodes 📅🅕🅝/ScheduleNodes"
 
     def animate(self, text, max_frames, current_frame, pw_a=0, pw_b=0, pw_c=0, pw_d=0, pre_text='', app_text=''):
+        current_frame = current_frame % max_frames
         inputText = str("{" + text + "}")
         inputText = re.sub(r',\s*}', '}', inputText)
         animation_prompts = json.loads(inputText.strip())
@@ -365,6 +367,7 @@ class PromptScheduleEncodeSDXL:
     CATEGORY = "FizzNodes 📅🅕🅝/ScheduleNodes"
 
     def animate(self, clip, width, height, crop_w, crop_h, target_width, target_height, text_g, text_l, app_text_G, app_text_L, pre_text_G, pre_text_L, max_frames, current_frame, print_output, pw_a, pw_b, pw_c, pw_d):
+        current_frame = current_frame % max_frames
         inputTextG = str("{" + text_g + "}")
         inputTextL = str("{" + text_l + "}")
         inputTextG = re.sub(r',\s*}', '}', inputTextG)
@@ -429,6 +432,7 @@ class PromptScheduleNodeFlowEnd:
     CATEGORY = "FizzNodes 📅🅕🅝/ScheduleNodes"
 
     def animate(self, text, max_frames, print_output, current_frame, clip, pw_a = 0, pw_b = 0, pw_c = 0, pw_d = 0, pre_text = '', app_text = ''):
+        current_frame = current_frame % max_frames
         if text[-1] == ",":
             text = text[:-1]
         if text[0] == ",":
@@ -581,6 +585,7 @@ class ValueSchedule:
     CATEGORY = "FizzNodes 📅🅕🅝/ScheduleNodes"
     
     def animate(self, text, max_frames, current_frame,):
+        current_frame = current_frame % max_frames
         t = get_inbetweens(parse_key_frames(text, max_frames), max_frames)
         cFrame = current_frame
         return (t[cFrame],int(t[cFrame]),)
@@ -618,3 +623,24 @@ class BatchValueScheduleLatentInput:
         max_frames = num_elements
         t = batch_get_inbetweens(batch_parse_key_frames(text, max_frames), max_frames)
         return (t, list(map(int,t)), num_latents, )
+
+# Expects a Batch Value Schedule list input, it exports an image batch with images taken from an input image batch
+# Expects values to be in range -1...1, could be normalized to accept any value range
+class ImageBatchFromValueSchedule:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "images": ("IMAGE",),
+                "values": ("FLOAT", { "default": 1.0, "min": -1.0, "max": 1.0, "label": "values" }),
+            }
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    FUNCTION = "animate"
+    CATEGORY = "FizzNodes 📅🅕🅝/BatchScheduleNodes"
+
+    def animate(self, images, values):
+        n = images.shape[0] - 1
+        values = [values] * n if isinstance(values, float) else [round((v + 1) / 2 * n) for v in values]
+        return (images[values], )
