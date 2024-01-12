@@ -9,14 +9,19 @@ import shutil
 import __main__
 
 python = sys.executable
+cwd = os.getcwd()
 
 
 # extentions_folder = os.path.join(os.path.dirname(os.path.realpath(__main__.__file__)),
 #                                  "web" + os.sep + "extensions" + os.sep + "FizzleDorf")
-extentions_folder = os.path.join("/home/ubuntu/content/ComfyUI/custom_nodes/ComfyUI_FizzNodes",
+extentions_folder = os.path.join(f"{cwd}/content/ComfyUI/custom_nodes/ComfyUI_FizzNodes",
                                  "web" + os.sep + "extensions" + os.sep + "FizzleDorf")
 # javascript_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), "javascript")
-javascript_folder = os.path.join("/home/ubuntu/content/ComfyUI/custom_nodes/ComfyUI_FizzNodes", "javascript")
+javascript_folder = os.path.join(f"{cwd}/content/ComfyUI/custom_nodes/ComfyUI_FizzNodes", "javascript")
+
+if not os.path.exists(javascript_folder):
+    print('Making the javascript folder')
+    os.makedirs(javascript_folder)
 
 if not os.path.exists(extentions_folder):
     print('Making the "web\extensions\FizzleDorf" folder')
